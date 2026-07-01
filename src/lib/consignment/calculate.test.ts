@@ -29,6 +29,14 @@ describe('sellerPercentForPrice', () => {
   it('sceglie la fascia superiore senza limite', () => {
     expect(sellerPercentForPrice(100, tiers)).toBe(30)
   })
+
+  it('lancia un errore se manca la fascia superiore (nessun maxPrice null)', () => {
+    const brokenTiers: CommissionTier[] = [
+      { maxPrice: 20, sellerPercent: 60 },
+      { maxPrice: 50, sellerPercent: 40 },
+    ]
+    expect(() => sellerPercentForPrice(100, brokenTiers)).toThrow()
+  })
 })
 
 describe('clientShare', () => {
