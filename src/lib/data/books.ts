@@ -55,7 +55,7 @@ export async function markSold(sku: string, prezzoVendita: number): Promise<void
   const settings = await getSettings()
   const { clientAmount } = clientShare(prezzoVendita, settings)
   const supabase = createServiceClient()
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from('libri')
     .update({
       stato: 'venduto',
@@ -65,14 +65,22 @@ export async function markSold(sku: string, prezzoVendita: number): Promise<void
     })
     .eq('sku', sku)
     .eq('stato', 'in_vendita') // solo un libro ancora in vendita può essere venduto
+    .select()
   if (error) throw new Error(`Marcatura venduto fallita: ${error.message}`)
+  if (!data || data.length === 0) {
+    throw new Error(`Impossibile segnare venduto: libro ${sku} inesistente o non più in vendita`)
+  }
 }
 
 export async function markReturned(sku: string): Promise<void> {
   const supabase = createServiceClient()
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from('libri')
     .update({ stato: 'reso', prezzo_vendita: null, data_vendita: null, quota_cliente: null })
     .eq('sku', sku)
+    .select()
   if (error) throw new Error(`Marcatura reso fallita: ${error.message}`)
+  if (!data || data.length === 0) {
+    throw new Error(`Impossibile segnare reso: libro ${sku} inesistente`)
+  }
 }
