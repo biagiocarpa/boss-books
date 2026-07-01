@@ -1,5 +1,6 @@
 # App Conto Vendita Libri — Documento di Design
 
+**Nome:** boss-books
 **Data:** 2026-07-01
 **Stato:** Design approvato (in attesa di review finale della spec)
 **Autore:** Biagio Carpaneto (dev) — per conto del committente ("il boss")
@@ -174,8 +175,28 @@ Il conto del cliente mostra tre totali:
    (non vanno richiesti ogni volta).
 4. Il boss paga **fuori dall'app** (PayPal, bonifico, ecc.), con i suoi tempi (la maturazione
    garantisce che i soldi ci siano).
-5. Il boss segna la richiesta come **"pagata"** → il disponibile si azzera → il movimento entra
-   nello **storico**.
+5. Il boss segna la richiesta come **"pagata"** → i libri agganciati a quella richiesta passano
+   a stato `pagato` → il disponibile si ricalcola da solo (quei libri non contano più) → la
+   richiesta resta nello **storico**.
+
+### 8.1 Regola anti-doppio-conteggio (vincolante)
+
+Il saldo si calcola da **una sola fonte: lo stato dei libri**. La tabella `richieste_pagamento`
+è **solo storico/workflow** e **non entra mai** nel calcolo del saldo.
+
+- Alla richiesta, la riga `richieste_pagamento` **si aggancia ai libri specifici** che sta
+  incassando (quelli maturati e non ancora `pagato` in quel momento).
+- Alla marcatura "pagata", quei libri passano a `pagato`.
+- **Disponibile = somma quote dei libri maturati con stato ≠ `pagato`.** L'`importo` scritto
+  nella richiesta serve solo a sapere quanto pagare e per lo storico — non si sottrae una
+  seconda volta.
+
+Motivo: unica verità = stato del libro → impossibile contare due volte per costruzione, e ogni
+libro racconta la sua storia fino a `pagato` (è la trasparenza libro-per-libro che è il senso
+dell'app).
+
+**Niente pagamenti parziali nell'MVP:** il cliente incassa sempre l'intero disponibile in un
+colpo, non una parte. (Da confermare col boss; se un giorno servirà, si rivede.)
 
 **Fase 2:** integrazione **PayPal Payouts** per liquidare con un click a partire dalla notifica
 di richiesta (pagamento sempre avviato dal boss, non automatico).
@@ -217,10 +238,13 @@ lettura del proprio conto disponibile anche con connessione debole.
 
 - **clienti**: `id` (8 cifre casuali, chiave), nome, contatti, dati_pagamento (PayPal/IBAN), note.
 - **libri**: `sku` (prefisso cliente + suffisso), `cliente_id`, titolo, prezzo_listino, stato
-  (`in_vendita` | `venduto` | `in_maturazione` | `disponibile` | `reso` | `pagato`),
-  prezzo_vendita, data_vendita, quota_cliente_calcolata.
+  (`in_vendita` | `venduto` | `reso` | `pagato`), prezzo_vendita, data_vendita, quota_cliente,
+  `richiesta_id` (FK → richieste_pagamento, valorizzato quando il libro viene incassato).
+  Nota: **maturato/disponibile NON sono stati salvati** — si derivano a runtime da
+  `data_vendita` + giorni di maturazione (vedi `computeBalance`).
 - **richieste_pagamento**: `id`, `cliente_id`, importo, stato (`richiesta` | `pagata`),
-  data_richiesta, data_pagamento.
+  data_richiesta, data_pagamento. I libri incassati la referenziano via `libri.richiesta_id`
+  (vedi §8.1). L'`importo` è storico, non è input del calcolo del saldo.
 - **impostazioni**: commissione_ebay, scaglioni (lista fascia→%), giorni_maturazione,
   soglia_minima_prelievo.
 
@@ -243,7 +267,7 @@ lettura del proprio conto disponibile anche con connessione debole.
 
 ## 12. Questioni aperte (non bloccanti per iniziare)
 
-- **Nome dell'app** e naming delle sezioni: ancora da decidere.
+- **Nome dell'app**: deciso → **boss-books**. Naming delle singole sezioni/etichette UI: ancora da rifinire.
 - **Scaglioni di prezzo esatti** e relative percentuali: il boss li sta tarando; l'app li rende
   configurabili, quindi non bloccano lo sviluppo.
 - Se in futuro serva una % personalizzata per singolo cliente (oltre agli scaglioni per prezzo):
