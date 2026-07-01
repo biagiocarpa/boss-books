@@ -37,6 +37,24 @@ describe('computeBalance', () => {
     expect(b.maturing).toBe(5)
     expect(b.paid).toBe(20)
   })
+
+  it('lista vuota → conto azzerato', () => {
+    const b = computeBalance([], now, 30)
+    expect(b).toEqual({ available: 0, maturing: 0, paid: 0 })
+  })
+
+  it('un libro pagato di recente (dentro la finestra di maturazione) resta in paid, non in maturing', () => {
+    const books: SoldBook[] = [
+      {
+        clientAmount: 15,
+        saleDate: new Date('2026-02-10T00:00:00Z'), // 5 giorni prima di `now`, dentro i 30gg
+        status: 'pagato',
+      },
+    ]
+    const b = computeBalance(books, now, 30)
+    expect(b.paid).toBe(15)
+    expect(b.maturing).toBe(0)
+  })
 })
 
 describe('canRequestPayout', () => {

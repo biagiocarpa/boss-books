@@ -4,6 +4,7 @@
 # working directory name when running `supabase init`.
 project_id = "boss"
 
+# NB: porte rimappate +1000 rispetto ai default Supabase (54321..) per evitare collisione con un altro progetto Supabase locale su questa macchina. In cloud non ha effetto.
 [api]
 enabled = true
 # Port to use for the API URL.

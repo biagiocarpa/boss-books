@@ -2,7 +2,8 @@ import type { BusinessSettings, Breakdown, CommissionTier } from './types'
 
 /** Arrotonda a 2 decimali (centesimi), half-up. */
 export function roundCents(value: number): number {
-  return Math.round((value + Number.EPSILON) * 100) / 100
+  const cents = value * 100
+  return Math.round(cents + (cents >= 0 ? 1 : -1) * 1e-9) / 100
 }
 
 /**

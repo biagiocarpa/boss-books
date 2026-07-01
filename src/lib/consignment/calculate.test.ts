@@ -8,6 +8,12 @@ describe('roundCents', () => {
     expect(roundCents(5.705)).toBe(5.71)
     expect(roundCents(28.499)).toBe(28.5)
   })
+
+  it('arrotonda per eccesso i valori .xx5 anche quando la rappresentazione float li porta sotto la metà (half-up vero)', () => {
+    expect(roundCents(2.015)).toBe(2.02)
+    expect(roundCents(2.135)).toBe(2.14)
+    expect(roundCents(2.675)).toBe(2.68)
+  })
 })
 
 describe('sellerPercentForPrice', () => {
@@ -63,5 +69,10 @@ describe('clientShare', () => {
     expect(b.net).toBe(95)
     expect(b.sellerCut).toBe(28.5)
     expect(b.clientAmount).toBe(66.5)
+  })
+
+  it('le quote si sommano al netto senza sfasare di un centesimo', () => {
+    const b = clientShare(33.33, settings)
+    expect(roundCents(b.sellerCut + b.clientAmount)).toBe(b.net)
   })
 })
