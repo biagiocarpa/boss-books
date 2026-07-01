@@ -23,9 +23,9 @@ const rowSchema = z.object({
 export function parseSettings(row: unknown): BusinessSettings {
   const r = rowSchema.parse(row)
 
-  const hasTerminal = r.scaglioni.some((t) => t.maxPrice === null)
-  if (!hasTerminal) {
-    throw new Error('Scaglioni non validi: manca la fascia terminale (uno scaglione con maxPrice null)')
+  const terminalCount = r.scaglioni.filter((t) => t.maxPrice === null).length
+  if (terminalCount !== 1) {
+    throw new Error('Scaglioni non validi: deve esserci esattamente una fascia terminale (uno scaglione con maxPrice null)')
   }
 
   const tiers = [...r.scaglioni].sort((a, b) => {

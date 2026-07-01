@@ -31,4 +31,18 @@ describe('parseSettings', () => {
     const bad = { ...validRow, commissione_ebay_percent: 150 }
     expect(() => parseSettings(bad)).toThrow()
   })
+
+  it('lancia se ci sono due fasce terminali (due maxPrice null)', () => {
+    const bad = {
+      commissione_ebay_percent: 5,
+      scaglioni: [
+        { maxPrice: 20, sellerPercent: 60 },
+        { maxPrice: null, sellerPercent: 40 },
+        { maxPrice: null, sellerPercent: 30 },
+      ],
+      giorni_maturazione: 30,
+      minimo_prelievo: 20,
+    }
+    expect(() => parseSettings(bad)).toThrow(/terminale|null/i)
+  })
 })
