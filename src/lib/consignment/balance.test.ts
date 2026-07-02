@@ -25,22 +25,24 @@ describe('isMatured', () => {
 describe('computeBalance', () => {
   const now = new Date('2026-02-15T00:00:00Z')
 
-  it('separa disponibile, in maturazione e pagato; ignora i resi', () => {
+  it('separa disponibile, in maturazione, in richiesta e pagato; ignora i resi', () => {
     const books: SoldBook[] = [
-      { clientAmount: 10, saleDate: new Date('2026-01-01T00:00:00Z'), status: 'venduto' }, // maturo
+      { clientAmount: 10, saleDate: new Date('2026-01-01T00:00:00Z'), status: 'venduto' }, // maturo, non in richiesta -> disponibile
+      { clientAmount: 7, saleDate: new Date('2026-01-01T00:00:00Z'), status: 'venduto', inPendingRequest: true }, // maturo ma in richiesta -> requested
       { clientAmount: 5, saleDate: new Date('2026-02-10T00:00:00Z'), status: 'venduto' },  // in maturazione
       { clientAmount: 20, saleDate: new Date('2025-12-01T00:00:00Z'), status: 'pagato' },  // pagato
       { clientAmount: 99, saleDate: new Date('2026-01-01T00:00:00Z'), status: 'reso' },    // ignorato
     ]
     const b = computeBalance(books, now, 30)
     expect(b.available).toBe(10)
+    expect(b.requested).toBe(7)
     expect(b.maturing).toBe(5)
     expect(b.paid).toBe(20)
   })
 
   it('lista vuota → conto azzerato', () => {
     const b = computeBalance([], now, 30)
-    expect(b).toEqual({ available: 0, maturing: 0, paid: 0 })
+    expect(b).toEqual({ available: 0, maturing: 0, requested: 0, paid: 0 })
   })
 
   it('un libro pagato di recente (dentro la finestra di maturazione) resta in paid, non in maturing', () => {
@@ -59,8 +61,8 @@ describe('computeBalance', () => {
 
 describe('canRequestPayout', () => {
   it('vero solo se il disponibile raggiunge il minimo', () => {
-    expect(canRequestPayout({ available: 25, maturing: 0, paid: 0 }, 20)).toBe(true)
-    expect(canRequestPayout({ available: 20, maturing: 0, paid: 0 }, 20)).toBe(true)
-    expect(canRequestPayout({ available: 19.99, maturing: 0, paid: 0 }, 20)).toBe(false)
+    expect(canRequestPayout({ available: 25, maturing: 0, requested: 0, paid: 0 }, 20)).toBe(true)
+    expect(canRequestPayout({ available: 20, maturing: 0, requested: 0, paid: 0 }, 20)).toBe(true)
+    expect(canRequestPayout({ available: 19.99, maturing: 0, requested: 0, paid: 0 }, 20)).toBe(false)
   })
 })
