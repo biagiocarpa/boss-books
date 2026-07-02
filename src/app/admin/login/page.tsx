@@ -8,7 +8,7 @@ export default async function LoginPage({
   const { errore } = await searchParams
   return (
     <main className="mx-auto flex min-h-screen max-w-sm flex-col justify-center gap-4 p-6">
-      <h1 className="text-2xl font-semibold">boss-books · Admin</h1>
+      <h1 className="text-2xl font-semibold">TrovaLibro.MO · Admin</h1>
       {errore && <p className="text-red-600">Credenziali non valide.</p>}
       <form action={login} className="flex flex-col gap-3">
         <input name="email" type="email" placeholder="Email" required className="border p-2" />
