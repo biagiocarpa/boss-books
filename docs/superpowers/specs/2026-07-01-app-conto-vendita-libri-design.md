@@ -89,8 +89,13 @@ Inserito → In vendita → Venduto → In maturazione (30 gg) → Disponibile �
   prelevabile**. Copre il periodo di reso (max 14 gg) più i tempi di spedizione/incasso.
 - **Disponibile**: passati i 30 gg, l'importo diventa prelevabile e concorre al saldo
   richiedibile.
-- **Reso / Annullato**: il compratore ha reso il libro (o l'annuncio è annullato). L'importo
-  esce dal conto del cliente. Ammesso solo mentre il libro è in maturazione.
+- **Reso**: **DECISO col boss** → il caso principale è il **compratore che restituisce un libro
+  già VENDUTO durante i 30 giorni di maturazione**. Il reso si applica quindi a un libro in stato
+  `venduto` (non ancora `pagato`): l'importo esce dal conto del cliente (che non viene pagato per
+  un libro tornato indietro). È esattamente ciò per cui esiste la maturazione. Non ammesso su un
+  libro già `pagato` (là servirebbe un storno di denaro — fuori scope MVP).
+  **Implicazione UI (da correggere nel Piano 3):** l'azione "Reso" nell'admin deve comparire sui
+  libri `venduto` (in maturazione), non su quelli `in_vendita` come nell'attuale Task 8.
 - **Pagato**: l'importo è stato liquidato al cliente e finisce nello **storico movimenti**.
 
 La trasparenza di questo ciclo **è** la garanzia che l'app promette: il cliente vede sempre in
@@ -272,6 +277,9 @@ lettura del proprio conto disponibile anche con connessione debole.
   configurabili, quindi non bloccano lo sviluppo.
 - Se in futuro serva una % personalizzata per singolo cliente (oltre agli scaglioni per prezzo):
   al momento **no**, la % dipende solo dal prezzo del libro.
+- ~~Semantica del "Reso"~~ **RISOLTA** (vedi §4): il reso è il compratore che restituisce un
+  libro **venduto** durante la maturazione; l'importo esce dal conto. Da riflettere nella UI admin
+  (azione "Reso" sui libri `venduto`, non `in_vendita`) nel Piano 3.
 
 ---
 
