@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import { getClientDashboard } from '@/lib/data/client-view'
+import { listPaidRequests } from '@/lib/data/requests'
 import { requestPaymentAction } from './actions'
 
 export const dynamic = 'force-dynamic'
@@ -18,6 +19,7 @@ export default async function ClientePage({ params }: { params: Promise<{ codice
   if (!dash) notFound()
 
   const { cliente, libri, balance, pending } = dash
+  const pagamenti = await listPaidRequests(codice)
   const euro = (n: number) => `${n.toFixed(2)} €`
 
   return (
@@ -73,6 +75,22 @@ export default async function ClientePage({ params }: { params: Promise<{ codice
             </li>
           ))}
         </ul>
+      </section>
+
+      <section className="mt-6">
+        <h2 className="mb-3 text-lg font-semibold">Pagamenti ricevuti</h2>
+        {pagamenti.length === 0 ? (
+          <p className="text-sm text-black/60">Nessun pagamento ricevuto finora.</p>
+        ) : (
+          <ul className="flex flex-col gap-2">
+            {pagamenti.map((p, i) => (
+              <li key={i} className="flex items-center justify-between rounded border border-black/10 bg-white p-3">
+                <span className="text-sm">{new Date(p.data_pagamento).toLocaleDateString('it-IT')}</span>
+                <span className="font-semibold">{euro(p.importo)}</span>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
     </main>
   )
