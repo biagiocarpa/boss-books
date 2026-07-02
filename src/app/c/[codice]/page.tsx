@@ -21,7 +21,7 @@ export default async function ClientePage({ params }: { params: Promise<{ codice
   const euro = (n: number) => `${n.toFixed(2)} €`
 
   return (
-    <main className="mx-auto min-h-screen max-w-xl bg-[#f5f1e6] p-5 text-black">
+    <main className="mx-auto max-w-xl p-5 text-black">
       <header className="mb-6">
         <h1 className="text-2xl font-semibold">Ciao {cliente.nome}</h1>
         <p className="font-mono text-xs text-black/50">codice {cliente.id}</p>
