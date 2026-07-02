@@ -35,8 +35,21 @@ libri del boss** (solo dati pubblici), e il Profilo mostra anche lo **storico de
 - La voce attiva è evidenziata. Realizzata in un **layout di segmento**
   (`src/app/c/[codice]/layout.tsx`), così ogni pagina figlia la eredita e il codice resta
   nell'URL (nessuna sessione).
-- La **vetrina pubblica `/` non cambia**: è marketing, non app; le icone appartengono
-  all'esperienza del cliente col suo link.
+- ~~La vetrina pubblica `/` non cambia~~ **SUPERATO (correzione del boss, 2026-07-02): le 3
+  icone devono esserci PER TUTTI, anche sulla pagina iniziale**, mantenendo il tasto admin.
+
+### 3-bis. Navigazione globale (correzione)
+
+- La barra a 3 icone compare anche su: **home `/`**, **catalogo pubblico `/libri`** e
+  **`/profilo`** (inserimento codice). Il tasto "Area admin" nel footer della home resta.
+- Senza codice nell'URL le voci puntano alle varianti pubbliche:
+  - **📚 Libri** → `/libri` (stesso catalogo, senza codice: è già tutto pubblico).
+  - **👤 Profilo** → `/profilo`: pagina "Inserisci il tuo codice" (8 cifre) che porta a
+    `/c/<codice>`. Il link personale resta la via primaria; questa è la via da "app aperta
+    dalla home".
+- Con codice (sotto `/c/[codice]`) le voci restano quelle personali, come già costruito.
+- Il componente barra è unico e condiviso (`codice` opzionale); l'URL eBay diventa una
+  costante condivisa (elimina la triplicazione segnalata in review).
 
 ## 4. Catalogo — `/c/[codice]/libri`
 

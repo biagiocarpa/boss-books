@@ -1,10 +1,10 @@
 import Image from 'next/image'
-
-const EBAY_URL = process.env.NEXT_PUBLIC_EBAY_STORE_URL ?? 'https://www.ebay.it/usr/trovalibro.mo'
+import { ClientNav } from '@/components/client-nav'
+import { EBAY_URL } from '@/lib/ebay'
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#f5f1e6] text-black">
+    <main className="min-h-screen bg-[#f5f1e6] pb-20 text-black">
       <section className="bg-[#092145] px-5 py-10">
         <Image
           src="/logo.jpg"
@@ -31,9 +31,9 @@ export default function Home() {
           Visita il negozio eBay
         </a>
         <p className="text-sm text-black/70">
-          Hai dei libri in conto vendita con noi? Apri il tuo <strong>link personale</strong> per
-          vedere i tuoi libri e il tuo conto. Se non lo hai ancora, chiedilo a chi ha ritirato i
-          tuoi libri.
+          Hai dei libri in conto vendita con noi? Apri il tuo <strong>link personale</strong> — o
+          tocca <strong>Profilo</strong> qui sotto e inserisci il tuo codice — per vedere i tuoi
+          libri e il tuo conto.
         </p>
       </section>
 
@@ -43,6 +43,8 @@ export default function Home() {
           Area admin
         </a>
       </footer>
+
+      <ClientNav ebayUrl={EBAY_URL} />
     </main>
   )
 }
