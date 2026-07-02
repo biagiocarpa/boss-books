@@ -5,6 +5,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <a href="/admin" className="font-semibold">boss-books · Admin</a>
         <nav className="flex gap-4 text-sm">
           <a href="/admin">Clienti</a>
+          <a href="/admin/richieste">Richieste</a>
           <a href="/admin/impostazioni">Impostazioni</a>
           <form action="/admin/logout" method="post"><button type="submit">Esci</button></form>
         </nav>
