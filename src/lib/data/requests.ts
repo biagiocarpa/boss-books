@@ -115,3 +115,21 @@ export async function markRequestPaid(id: string): Promise<void> {
     throw new Error('Richiesta inesistente o già evasa.')
   }
 }
+
+export interface PaidRequestView {
+  importo: number
+  data_pagamento: string
+}
+
+/** Storico pagamenti del cliente: richieste pagate, più recenti prima. */
+export async function listPaidRequests(clienteId: string): Promise<PaidRequestView[]> {
+  const supabase = createServiceClient()
+  const { data, error } = await supabase
+    .from('richieste_pagamento')
+    .select('importo, data_pagamento')
+    .eq('cliente_id', clienteId)
+    .eq('stato', 'pagata')
+    .order('data_pagamento', { ascending: false })
+  if (error) throw new Error(`Lettura storico pagamenti fallita: ${error.message}`)
+  return (data ?? []).filter((r) => r.data_pagamento != null) as PaidRequestView[]
+}
