@@ -10,13 +10,17 @@ export interface SoldBook {
   saleDate: Date
   /** Stato ai fini del conto. */
   status: SoldBookStatus
+  /** True se il libro (venduto) è già agganciato a una richiesta in attesa. */
+  inPendingRequest?: boolean
 }
 
 export interface Balance {
-  /** Maturato e non ancora pagato: cifra richiedibile. */
+  /** Maturato, non pagato e NON in una richiesta: cifra richiedibile. */
   available: number
   /** Venduto ma ancora dentro la finestra di maturazione. */
   maturing: number
+  /** Venduto+maturato ma già agganciato a una richiesta in attesa. */
+  requested: number
   /** Già liquidato al cliente. */
   paid: number
 }
@@ -30,18 +34,22 @@ export function isMatured(saleDate: Date, now: Date, maturationDays: number): bo
 }
 
 /**
- * Aggrega i libri venduti di un cliente in {disponibile, in maturazione, pagato}.
- * I libri 'reso' sono esclusi dal conto.
+ * Aggrega i libri venduti di un cliente in {disponibile, in maturazione, in richiesta, pagato}.
+ * I libri 'reso' sono esclusi dal conto. Un libro venduto già agganciato a una richiesta in
+ * attesa (`inPendingRequest`) finisce in `requested`, non in `available`.
  */
 export function computeBalance(books: SoldBook[], now: Date, maturationDays: number): Balance {
   let available = 0
   let maturing = 0
+  let requested = 0
   let paid = 0
 
   for (const book of books) {
     if (book.status === 'reso') continue
     if (book.status === 'pagato') {
       paid += book.clientAmount
+    } else if (book.inPendingRequest) {
+      requested += book.clientAmount
     } else if (isMatured(book.saleDate, now, maturationDays)) {
       available += book.clientAmount
     } else {
@@ -52,6 +60,7 @@ export function computeBalance(books: SoldBook[], now: Date, maturationDays: num
   return {
     available: roundCents(available),
     maturing: roundCents(maturing),
+    requested: roundCents(requested),
     paid: roundCents(paid),
   }
 }

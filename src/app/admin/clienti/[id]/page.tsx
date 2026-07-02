@@ -44,17 +44,17 @@ export default async function ClientePage({ params }: { params: Promise<{ id: st
                 <td>{l.quota_cliente != null ? `${l.quota_cliente.toFixed(2)} €` : '—'}</td>
                 <td className="flex gap-2 py-1">
                   {l.stato === 'in_vendita' && (
-                    <>
-                      <form action={markSoldAction.bind(null, id)} className="flex gap-1">
-                        <input type="hidden" name="sku" value={l.sku} />
-                        <input name="prezzo_vendita" type="number" step="0.01" min="0" placeholder="€ vend." required className="w-24 border p-1" />
-                        <button type="submit" className="bg-green-700 px-2 text-white">Venduto</button>
-                      </form>
-                      <form action={markReturnedAction.bind(null, id)}>
-                        <input type="hidden" name="sku" value={l.sku} />
-                        <button type="submit" className="border px-2">Reso</button>
-                      </form>
-                    </>
+                    <form action={markSoldAction.bind(null, id)} className="flex gap-1">
+                      <input type="hidden" name="sku" value={l.sku} />
+                      <input name="prezzo_vendita" type="number" step="0.01" min="0" placeholder="€ vend." required className="w-24 border p-1" />
+                      <button type="submit" className="bg-green-700 px-2 text-white">Venduto</button>
+                    </form>
+                  )}
+                  {l.stato === 'venduto' && (
+                    <form action={markReturnedAction.bind(null, id)}>
+                      <input type="hidden" name="sku" value={l.sku} />
+                      <button type="submit" className="border px-2">Reso</button>
+                    </form>
                   )}
                 </td>
               </tr>
