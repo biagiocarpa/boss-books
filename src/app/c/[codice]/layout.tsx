@@ -1,6 +1,5 @@
-import { ClientNav } from './nav'
-
-const EBAY_URL = process.env.NEXT_PUBLIC_EBAY_STORE_URL ?? 'https://www.ebay.it/usr/trovalibro.mo'
+import { ClientNav } from '@/components/client-nav'
+import { EBAY_URL } from '@/lib/ebay'
 
 export default async function ClienteLayout({
   children,

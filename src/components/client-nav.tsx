@@ -1,12 +1,16 @@
 'use client'
 import { usePathname } from 'next/navigation'
 
-/** Barra di navigazione a 3 icone del lato cliente. Solo UI: nessun accesso a dati. */
-export function ClientNav({ codice, ebayUrl }: { codice: string; ebayUrl: string }) {
+/**
+ * Barra di navigazione a 3 icone (Negozio / Libri / Profilo). Solo UI, nessun accesso a dati.
+ * Con `codice` punta alle pagine personali; senza, alle varianti pubbliche (/libri, /profilo).
+ */
+export function ClientNav({ codice, ebayUrl }: { codice?: string; ebayUrl: string }) {
   const pathname = usePathname()
-  const base = `/c/${codice}`
-  const isLibri = pathname === `${base}/libri`
-  const isProfilo = pathname === base
+  const profiloHref = codice ? `/c/${codice}` : '/profilo'
+  const libriHref = codice ? `/c/${codice}/libri` : '/libri'
+  const isLibri = pathname === libriHref
+  const isProfilo = pathname === profiloHref
 
   const item = (active: boolean) =>
     `flex flex-1 flex-col items-center gap-0.5 p-2 text-xs ${
@@ -20,11 +24,11 @@ export function ClientNav({ codice, ebayUrl }: { codice: string; ebayUrl: string
           <span aria-hidden className="text-xl">🛒</span>
           Negozio
         </a>
-        <a href={`${base}/libri`} className={item(isLibri)} aria-current={isLibri ? 'page' : undefined}>
+        <a href={libriHref} className={item(isLibri)} aria-current={isLibri ? 'page' : undefined}>
           <span aria-hidden className="text-xl">📚</span>
           Libri
         </a>
-        <a href={base} className={item(isProfilo)} aria-current={isProfilo ? 'page' : undefined}>
+        <a href={profiloHref} className={item(isProfilo)} aria-current={isProfilo ? 'page' : undefined}>
           <span aria-hidden className="text-xl">👤</span>
           Profilo
         </a>
