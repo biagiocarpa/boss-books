@@ -78,9 +78,10 @@ export async function markReturned(sku: string): Promise<void> {
     .from('libri')
     .update({ stato: 'reso', prezzo_vendita: null, data_vendita: null, quota_cliente: null })
     .eq('sku', sku)
+    .in('stato', ['in_vendita', 'venduto'])
     .select()
   if (error) throw new Error(`Marcatura reso fallita: ${error.message}`)
   if (!data || data.length === 0) {
-    throw new Error(`Impossibile segnare reso: libro ${sku} inesistente`)
+    throw new Error(`Impossibile segnare reso: libro ${sku} inesistente o in uno stato non reso-ibile (pagato/già reso)`)
   }
 }
