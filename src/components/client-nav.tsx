@@ -13,12 +13,12 @@ export function ClientNav({ codice, ebayUrl }: { codice?: string; ebayUrl: strin
   const isProfilo = pathname === profiloHref
 
   const item = (active: boolean) =>
-    `flex flex-1 flex-col items-center gap-0.5 p-2 text-xs ${
-      active ? 'font-semibold text-[#092145] border-t-2 border-[#092145] -mt-px bg-[#f5f1e6]' : 'text-black/70'
+    `flex flex-1 flex-col items-center gap-0.5 p-2 text-xs font-libro ${
+      active ? 'nav-voce-attiva' : 'nav-voce'
     }`
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 border-t border-black/20 bg-white">
+    <nav className="navbar-carta fixed inset-x-0 bottom-0">
       <div className="mx-auto flex max-w-xl">
         <a href={ebayUrl} target="_blank" rel="noopener noreferrer" className={item(false)}>
           <span aria-hidden className="text-xl">🛒</span>
