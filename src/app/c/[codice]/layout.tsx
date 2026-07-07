@@ -10,7 +10,7 @@ export default async function ClienteLayout({
 }) {
   const { codice } = await params
   return (
-    <div className="min-h-screen bg-[#f5f1e6] pb-20">
+    <div className="parch min-h-screen pb-24">
       {children}
       <ClientNav codice={codice} ebayUrl={EBAY_URL} />
     </div>

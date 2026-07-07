@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic'
 /** Catalogo pubblico raggiungibile senza codice (dalla barra della home). */
 export default function CatalogoPubblicoPage() {
   return (
-    <div className="min-h-screen bg-[#f5f1e6] pb-20">
+    <div className="parch min-h-screen pb-24">
       <CatalogoView />
       <ClientNav ebayUrl={EBAY_URL} />
     </div>
