@@ -24,3 +24,113 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* === Tema "Carta & Inchiostro" (spec 2026-07-02-tema-biblioteca) === */
+
+.font-libro {
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+/* Carta pergamena rigata */
+.parch {
+  background-color: #f3e9d2;
+  background-image: repeating-linear-gradient(
+    0deg, transparent, transparent 25px, rgba(9, 33, 69, 0.055) 26px
+  );
+  box-shadow: inset 0 0 60px rgba(107, 85, 53, 0.3);
+}
+.parch-invecchiata {
+  box-shadow: inset 0 0 60px rgba(107, 85, 53, 0.35);
+}
+
+/* Cornice doppia da frontespizio */
+.cornice {
+  border: 2px solid #092145;
+  outline: 1px solid #8b3a2e;
+  outline-offset: 4px;
+}
+
+/* Bottone inchiostro */
+.ink-btn {
+  background: #092145;
+  color: #f3e9d2;
+  font-weight: 700;
+  text-align: center;
+  padding: 0.75rem;
+  border-radius: 2px;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 0 #8b3a2e;
+  display: block;
+  width: 100%;
+}
+
+/* Riga di registro */
+.riga {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+  border-bottom: 1px dotted rgba(9, 33, 69, 0.45);
+  padding: 0.45rem 0.15rem 0.25rem;
+}
+
+/* Titolo di sezione: ❦ MAIUSCOLO SPAZIATO ❦ */
+.titolo-sez {
+  font-size: 0.7rem;
+  letter-spacing: 3px;
+  color: #8b3a2e;
+  text-align: center;
+  text-transform: uppercase;
+  margin: 1rem 0 0.35rem;
+}
+
+/* Timbri */
+.timbro {
+  display: inline-block;
+  border: 2px solid #2e5d34;
+  color: #2e5d34;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  transform: rotate(-8deg);
+  opacity: 0.85;
+  text-transform: uppercase;
+}
+.timbro-blu {
+  border-color: #092145;
+  color: #092145;
+}
+
+/* Sigillo di ceralacca */
+.ceralacca {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #c0533f, #7b2d26 70%);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f3e9d2;
+  font-size: 0.6rem;
+  font-weight: 700;
+  transform: rotate(-10deg);
+}
+
+/* Barra di navigazione in tema */
+.navbar-carta {
+  border-top: 1.5px solid #092145;
+  background: #ece0c4;
+}
+.nav-voce {
+  color: #3d4c63;
+}
+.nav-voce-attiva {
+  background: #f3e9d2;
+  border-top: 2.5px solid #8b3a2e;
+  margin-top: -2px;
+  font-weight: 700;
+  color: #092145;
+}
